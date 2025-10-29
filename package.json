@@ -2,12 +2,15 @@
   "name": "restaurant-ordering-app",
   "version": "1.0.0",
   "description": "Two-panel restaurant ordering system",
+  "private": true,
   "scripts": {
     "dev": "concurrently \"npm run server\" \"npm run client\" \"npm run admin\"",
     "server": "cd server && npm run dev",
     "client": "cd client && npm start",
     "admin": "cd admin && npm start",
-    "install-all": "npm install && cd client && npm install && cd ../admin && npm install && cd ../server && npm install"
+    "install-all": "npm install && cd client && npm install && cd ../admin && npm install && cd ../server && npm install",
+    "build": "cd client && npm run build",
+    "start": "cd server && npm start"
   },
   "devDependencies": {
     "concurrently": "^8.2.2"
