@@ -1,0 +1,151 @@
+.menu-card {
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  overflow: hidden;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.menu-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+.menu-card-image {
+  height: 200px;
+  overflow: hidden;
+  position: relative;
+}
+
+.menu-card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.menu-card:hover .menu-card-image img {
+  transform: scale(1.05);
+}
+
+.placeholder-image {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 3rem;
+}
+
+.menu-card-content {
+  padding: 1.5rem;
+}
+
+.menu-card-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+
+.menu-card-description {
+  color: #666;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin-bottom: 1rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.menu-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.menu-card-price {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #667eea;
+}
+
+/* --- Add to Cart Button --- */
+.add-to-cart-btn {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 25px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.add-to-cart-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+.add-to-cart-btn:active {
+  transform: translateY(0);
+}
+
+/* --- Quantity Controls --- */
+.quantity-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #f8f9ff;
+  border-radius: 25px;
+  padding: 6px 12px;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
+}
+
+.qty-btn {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  padding: 6px 10px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 1rem;
+  transition: transform 0.2s ease, background 0.3s ease;
+}
+
+.qty-btn:hover {
+  transform: scale(1.1);
+  background: linear-gradient(135deg, #5b6fe3 0%, #6f42c1 100%);
+}
+
+.qty-display {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #333;
+  min-width: 24px;
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+  .menu-card-content {
+    padding: 1rem;
+  }
+
+  .menu-card-title {
+    font-size: 1.1rem;
+  }
+
+  .add-to-cart-btn {
+    padding: 0.6rem 1.2rem;
+    font-size: 0.9rem;
+  }
+
+  .quantity-controls {
+    padding: 4px 8px;
+  }
+}

@@ -1,0 +1,100 @@
+/* ===========================
+   Analytics Panel Styles
+   =========================== */
+
+.analytics-container {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding: 2rem;
+  background-color: #fafafa;
+  min-height: 80vh;
+}
+
+/* ===== Top Summary Cards ===== */
+.analytics-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.5rem;
+}
+
+.analytics-card {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+  padding: 1.5rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.analytics-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.12);
+}
+
+.analytics-card h3 {
+  font-size: 1.1rem;
+  color: #444;
+  margin-bottom: 0.5rem;
+}
+
+.analytics-card .value {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #1e88e5;
+}
+
+/* ===== Best Sellers Section ===== */
+.best-sellers {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+  padding: 1.5rem;
+}
+
+.best-sellers h2 {
+  font-size: 1.3rem;
+  color: #222;
+  margin-bottom: 1rem;
+  font-weight: 600;
+  border-bottom: 2px solid #1e88e5;
+  padding-bottom: 0.4rem;
+}
+
+.best-sellers table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 0.5rem;
+}
+
+.best-sellers th,
+.best-sellers td {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  font-size: 0.95rem;
+  border-bottom: 1px solid #eee;
+}
+
+.best-sellers th {
+  color: #666;
+  font-weight: 600;
+  background: #f7f9fc;
+}
+
+.best-sellers tr:hover {
+  background: #f5faff;
+}
+
+.best-sellers td {
+  color: #333;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 768px) {
+  .analytics-container {
+    padding: 1rem;
+  }
+
+  .analytics-cards {
+    grid-template-columns: 1fr;
+  }
+}
