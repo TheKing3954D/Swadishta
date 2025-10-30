@@ -1,7 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import './MenuManager.css';
 
-const MenuManager = ({ menuItems, onAddItem, onUpdateItem, onDeleteItem }) => {
+const API_BASE = 'https://swadishta-server.onrender.com/api/menu'; // ✅ Your Render server base
+
+const MenuManager = () => {
+  const [menuItems, setMenuItems] = useState([]);
   const [showAddForm, setShowAddForm] = useState(false);
   const [editingItem, setEditingItem] = useState(null);
   const [formData, setFormData] = useState({
@@ -11,24 +15,49 @@ const MenuManager = ({ menuItems, onAddItem, onUpdateItem, onDeleteItem }) => {
     image: ''
   });
 
-  const handleSubmit = (e) => {
+  // ✅ Fetch menu items on load
+  const fetchMenu = async () => {
+    try {
+      const res = await axios.get(API_BASE);
+      setMenuItems(res.data);
+    } catch (err) {
+      console.error('Error fetching menu:', err);
+      alert('⚠️ Failed to load menu. Check server connection.');
+    }
+  };
+
+  useEffect(() => {
+    fetchMenu();
+  }, []);
+
+  // ✅ Add / Update item
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const item = {
       ...formData,
       price: parseFloat(formData.price)
     };
 
-    if (editingItem) {
-      onUpdateItem(editingItem.id, item);
-      setEditingItem(null);
-    } else {
-      onAddItem(item);
-    }
+    try {
+      if (editingItem) {
+        await axios.put(`${API_BASE}/${editingItem._id}`, item);
+        alert('✅ Item updated successfully!');
+      } else {
+        await axios.post(API_BASE, item);
+        alert('✅ Item added successfully!');
+      }
 
-    setFormData({ name: '', description: '', price: '', image: '' });
-    setShowAddForm(false);
+      setShowAddForm(false);
+      setEditingItem(null);
+      setFormData({ name: '', description: '', price: '', image: '' });
+      fetchMenu(); // Refresh list
+    } catch (err) {
+      console.error('Error saving item:', err);
+      alert('❌ Failed to save item. Please check console.');
+    }
   };
 
+  // ✅ Edit
   const handleEdit = (item) => {
     setEditingItem(item);
     setFormData({
@@ -38,6 +67,20 @@ const MenuManager = ({ menuItems, onAddItem, onUpdateItem, onDeleteItem }) => {
       image: item.image || ''
     });
     setShowAddForm(true);
+  };
+
+  // ✅ Delete
+  const handleDelete = async (id) => {
+    if (!window.confirm('Are you sure you want to delete this item?')) return;
+
+    try {
+      await axios.delete(`${API_BASE}/${id}`);
+      alert('🗑️ Item deleted');
+      fetchMenu();
+    } catch (err) {
+      console.error('Error deleting item:', err);
+      alert('❌ Failed to delete item.');
+    }
   };
 
   const handleCancel = () => {
@@ -50,10 +93,7 @@ const MenuManager = ({ menuItems, onAddItem, onUpdateItem, onDeleteItem }) => {
     <div className="menu-manager">
       <div className="menu-header">
         <h2>Menu Management</h2>
-        <button 
-          className="add-item-btn"
-          onClick={() => setShowAddForm(true)}
-        >
+        <button className="add-item-btn" onClick={() => setShowAddForm(true)}>
           + Add New Item
         </button>
       </div>
@@ -62,13 +102,13 @@ const MenuManager = ({ menuItems, onAddItem, onUpdateItem, onDeleteItem }) => {
         <div className="form-overlay">
           <form className="menu-form" onSubmit={handleSubmit}>
             <h3>{editingItem ? 'Edit Menu Item' : 'Add New Menu Item'}</h3>
-            
+
             <div className="form-group">
               <label>Item Name</label>
               <input
                 type="text"
                 value={formData.name}
-                onChange={(e) => setFormData({...formData, name: e.target.value})}
+                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 required
               />
             </div>
@@ -77,7 +117,7 @@ const MenuManager = ({ menuItems, onAddItem, onUpdateItem, onDeleteItem }) => {
               <label>Description</label>
               <textarea
                 value={formData.description}
-                onChange={(e) => setFormData({...formData, description: e.target.value})}
+                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                 required
               />
             </div>
@@ -88,7 +128,7 @@ const MenuManager = ({ menuItems, onAddItem, onUpdateItem, onDeleteItem }) => {
                 type="number"
                 step="0.01"
                 value={formData.price}
-                onChange={(e) => setFormData({...formData, price: e.target.value})}
+                onChange={(e) => setFormData({ ...formData, price: e.target.value })}
                 required
               />
             </div>
@@ -98,7 +138,7 @@ const MenuManager = ({ menuItems, onAddItem, onUpdateItem, onDeleteItem }) => {
               <input
                 type="url"
                 value={formData.image}
-                onChange={(e) => setFormData({...formData, image: e.target.value})}
+                onChange={(e) => setFormData({ ...formData, image: e.target.value })}
                 placeholder="https://example.com/image.jpg"
               />
             </div>
@@ -116,8 +156,8 @@ const MenuManager = ({ menuItems, onAddItem, onUpdateItem, onDeleteItem }) => {
       )}
 
       <div className="menu-items-grid">
-        {menuItems.map(item => (
-          <div key={item.id} className="menu-item-card">
+        {menuItems.map((item) => (
+          <div key={item._id} className="menu-item-card">
             <div className="menu-item-image">
               {item.image ? (
                 <img src={item.image} alt={item.name} />
@@ -125,24 +165,18 @@ const MenuManager = ({ menuItems, onAddItem, onUpdateItem, onDeleteItem }) => {
                 <div className="placeholder-image">🍽️</div>
               )}
             </div>
-            
+
             <div className="menu-item-content">
               <h4>{item.name}</h4>
               <p>{item.description}</p>
               <div className="menu-item-price">₹{item.price.toFixed(2)}</div>
             </div>
-            
+
             <div className="menu-item-actions">
-              <button 
-                className="edit-btn"
-                onClick={() => handleEdit(item)}
-              >
+              <button className="edit-btn" onClick={() => handleEdit(item)}>
                 Edit
               </button>
-              <button 
-                className="delete-btn"
-                onClick={() => onDeleteItem(item.id)}
-              >
+              <button className="delete-btn" onClick={() => handleDelete(item._id)}>
                 Delete
               </button>
             </div>
