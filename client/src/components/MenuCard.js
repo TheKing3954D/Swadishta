@@ -2,9 +2,20 @@ import React from 'react';
 import './MenuCard.css';
 
 const MenuCard = ({ item = {}, cart = [], onAddToCart, onUpdateQuantity }) => {
-  // Safely find item in cart (handle cases when cart is empty or item missing)
-  const cartItem = cart.find((cartItem) => cartItem.id === item.id);
+  // ✅ MongoDB items have `_id`, so support both
+  const itemId = item._id || item.id;
+
+  // ✅ Find item safely in cart
+  const cartItem = cart.find((cartItem) => cartItem._id === itemId || cartItem.id === itemId);
   const quantity = cartItem ? cartItem.quantity : 0;
+
+  const handleAdd = () => {
+    if (onAddToCart) onAddToCart({ ...item, _id: itemId });
+  };
+
+  const handleUpdate = (newQty) => {
+    if (onUpdateQuantity) onUpdateQuantity(itemId, newQty);
+  };
 
   return (
     <div className="menu-card">
@@ -30,28 +41,22 @@ const MenuCard = ({ item = {}, cart = [], onAddToCart, onUpdateQuantity }) => {
           </span>
 
           {quantity === 0 ? (
-            <button
-              className="add-to-cart-btn"
-              onClick={() => onAddToCart && onAddToCart(item)}
-            >
+            <button className="add-to-cart-btn" onClick={handleAdd}>
               Add to Cart
             </button>
           ) : (
             <div className="quantity-controls">
               <button
                 className="qty-btn"
-                onClick={() =>
-                  onUpdateQuantity && onUpdateQuantity(item.id, quantity - 1)
-                }
+                onClick={() => handleUpdate(quantity - 1)}
+                disabled={quantity <= 0}
               >
                 −
               </button>
               <span className="qty-display">{quantity}</span>
               <button
                 className="qty-btn"
-                onClick={() =>
-                  onUpdateQuantity && onUpdateQuantity(item.id, quantity + 1)
-                }
+                onClick={() => handleUpdate(quantity + 1)}
               >
                 +
               </button>
