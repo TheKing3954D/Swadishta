@@ -9,8 +9,11 @@
     "client": "cd client && npm start",
     "admin": "cd admin && npm start",
     "install-all": "npm install && cd client && npm install && cd ../admin && npm install && cd ../server && npm install",
-    "build": "cd client && npm run build",
-    "start": "cd server && npm start"
+    "build": "npm run build:client && npm run build:admin && npm run build:server",
+    "build: client": "cd client && npm run build",
+    "build: admin": "cd admin && npm run build",
+    "build:server": "cd server && npm run build || echo 'no server build script'",
+    "start": "node server/index.js"
   },
   "devDependencies": {
     "concurrently": "^8.2.2"
