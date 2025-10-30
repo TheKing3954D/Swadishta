@@ -211,6 +211,6 @@ app.get('/api/health', (req, res) => {
 // Start server
 app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
-  console.log(`📱 Customer app: http://localhost:3000`);
-  console.log(`⚙️  Admin panel: http://localhost:3002`);
+  console.log(`📱 Customer app: https://swadishta-client.vercel.app/`);
+  console.log(`⚙️  Admin panel: https://swadishta-admin.vercel.app/`);
 });
