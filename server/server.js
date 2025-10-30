@@ -14,15 +14,18 @@ const OrderHistory = require('./models/OrderHistory');
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-// Middleware
-app.use(cors());
+// -------------------- MIDDLEWARE --------------------
+app.use(cors({
+  origin: ['http://localhost:5173', 'https://swadishta-client.vercel.app', 'https://swadishta-admin.vercel.app'],
+  credentials: true
+}));
 app.use(bodyParser.json());
 app.use(helmet());
 
-// ✅ MongoDB Connection
+// -------------------- MONGODB CONNECTION --------------------
 mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
-  useUnifiedTopology: true,
+  useUnifiedTopology: true
 })
 .then(() => console.log('✅ Connected to MongoDB Atlas'))
 .catch(err => console.error('❌ MongoDB connection error:', err));
@@ -35,6 +38,7 @@ app.get('/api/menu', async (req, res) => {
     const menu = await MenuItem.find();
     res.json(menu);
   } catch (err) {
+    console.error('Menu fetch error:', err);
     res.status(500).json({ error: 'Server error fetching menu' });
   }
 });
@@ -46,6 +50,7 @@ app.post('/api/menu', async (req, res) => {
     await item.save();
     res.status(201).json(item);
   } catch (err) {
+    console.error('Add menu error:', err);
     res.status(400).json({ error: 'Invalid menu data' });
   }
 });
@@ -57,6 +62,7 @@ app.put('/api/menu/:id', async (req, res) => {
     if (!updated) return res.status(404).json({ error: 'Item not found' });
     res.json(updated);
   } catch (err) {
+    console.error('Update error:', err);
     res.status(400).json({ error: 'Error updating item' });
   }
 });
@@ -67,6 +73,7 @@ app.delete('/api/menu/:id', async (req, res) => {
     await MenuItem.findByIdAndDelete(req.params.id);
     res.status(204).send();
   } catch (err) {
+    console.error('Delete error:', err);
     res.status(400).json({ error: 'Error deleting item' });
   }
 });
@@ -79,6 +86,7 @@ app.get('/api/orders', async (req, res) => {
     const orders = await Order.find({ status: 'pending' });
     res.json(orders);
   } catch (err) {
+    console.error('Fetch orders error:', err);
     res.status(500).json({ error: 'Error fetching orders' });
   }
 });
@@ -105,6 +113,7 @@ app.post('/api/orders', async (req, res) => {
     await newOrder.save();
     res.status(201).json(newOrder);
   } catch (err) {
+    console.error('Create order error:', err);
     res.status(400).json({ error: 'Failed to create order' });
   }
 });
@@ -124,29 +133,28 @@ app.patch('/api/orders/:id/complete', async (req, res) => {
 
     res.json(completedOrder);
   } catch (err) {
+    console.error('Complete order error:', err);
     res.status(500).json({ error: 'Error completing order' });
   }
 });
 
 // -------------------- ORDER HISTORY ROUTES --------------------
-
 app.get('/api/orders/history', async (req, res) => {
   try {
     const history = await OrderHistory.find().sort({ completedAt: -1 });
     res.json(history);
   } catch (err) {
+    console.error('Order history error:', err);
     res.status(500).json({ error: 'Error fetching order history' });
   }
 });
 
 // -------------------- HEALTH CHECK --------------------
-
 app.get('/api/health', (req, res) => {
   res.json({ status: 'OK', time: new Date().toISOString() });
 });
 
 // -------------------- START SERVER --------------------
-
 app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
 });
